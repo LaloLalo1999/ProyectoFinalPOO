@@ -1,4 +1,5 @@
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,19 +7,27 @@ import java.util.List;
 
 public class DataLoader {
     public static void main(String[] args) {
-        String csvFile = "/home/lalo/IdeaProjects/ProyectoFinalPOO/src/main/resources/SOCR-HeightWeight.csv";
+        String csvFile = "500_Person_Gender_Height_Weight_Index.csv";
         List<List<Double>> inputs = new ArrayList<>();
         List<List<Double>> targets = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
+        // Calculate the mean and standard deviation for Height, Weight, and Index
+        double[] mean = new double[3];
+        double[] std = new double[3];
+        int count = 0;
+
+
+
+        // Read the data from the CSV file
+        try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
+            String[] line;
+            while ((line = reader.readNext()) != null) {
                 List<Double> inputRow = new ArrayList<>();
                 List<Double> targetRow = new ArrayList<>();
 
-                String[] values = line.split(",");
-
                 // Preprocess input features and add them to inputRow
+
+
                 // Preprocess target variable (gender) and add it to targetRow
 
                 inputs.add(inputRow);
@@ -45,6 +54,7 @@ public class DataLoader {
         }
 
         // Evaluate the network
-
+        // ...
     }
+
 }
