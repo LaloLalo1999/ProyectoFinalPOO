@@ -7,7 +7,7 @@ public class Network {
 
     // Constructor que crea una red con una cantidad dada de características de entrada, neuronas ocultas y neuronas de salida
     public Network(int inputFeatures, int hiddenNeurons, int outputNeurons) {
-        inputLayer = new Layer(inputFeatures, 0, false);
+        inputLayer = new Layer(inputFeatures, 1, false);
         hiddenLayer = new Layer(hiddenNeurons, inputFeatures, true);
         outputLayer = new Layer(outputNeurons, hiddenNeurons, true);
     }
