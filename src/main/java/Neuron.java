@@ -17,16 +17,22 @@ public class Neuron {
     public Neuron(int num_weights, boolean bias) {
         Random r = new Random();
         this.weights = new ArrayList<>();
+        if (bias) {
+            num_weights--;
+        }
         for (int i = 0; i < num_weights; i++) {
             this.weights.add(r.nextDouble()); // Inicializa los pesos con valores aleatorios
         }
         if (bias) {
-            this.weights.add(1.0); // Si la neurona tiene sesgo, se añade un peso adicional
+            this.weights.add(1.0); // Inicializa el sesgo con 1
         }
+
     }
 
     // Calcula la suma ponderada de las entradas y los pesos de la neurona
     public double calculateWeightedSum(List<Double> inputs) {
+//        System.out.println("inputs: " + inputs);
+//        System.out.println("weights: " + weights);
         double sum = 0;
         for (int i = 0; i < inputs.size(); i++) {
             sum += inputs.get(i) * weights.get(i);

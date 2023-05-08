@@ -1,87 +1,51 @@
-// Importa las clases necesarias para leer archivos CSV y manejar excepciones
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvValidationException;
-
+// DataLoader.java
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DataLoader {
-    // Declara dos listas para almacenar los datos de entrada y salida
-    private final List<List<Double>> inputData;
-    private final List<Double> outputData;
+    private final List<List<Double>> data;
+    private final List<Double> labels;
 
-    // Constructor que recibe la ruta del archivo CSV
-    public DataLoader(String filePath) throws IOException {
-        // Inicializa las listas de datos de entrada y salida
-        inputData = new ArrayList<>();
-        outputData = new ArrayList<>();
+    public DataLoader() {
+        data = new ArrayList<>();
+        labels = new ArrayList<>();
+    }
 
-        // Crea un FileReader para leer el archivo CSV y un CSVReader para procesar los datos
-        // El CSVReaderBuilder permite configurar opciones, en este caso, se omite la primera línea del archivo
-        try (FileReader fileReader = new FileReader(filePath);
-             CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build()) {
-
-            // Lee cada línea del archivo CSV
-            String[] line;
-            while ((line = csvReader.readNext()) != null) {
-                // Convierte el género a un valor numérico (1.0 para "Male" y 0.0 para cualquier otro valor)
-                double gender = "Male".equals(line[0]) ? 1.0 : 0.0;
-                // Convierte las columnas de altura, peso e IMC a valores numéricos
-                double height = Double.parseDouble(line[1]);
-                double weight = Double.parseDouble(line[2]);
-                double index = Double.parseDouble(line[3]);
-
-                // Añade el género a la lista de datos de salida
-                outputData.add(gender);
-                // Crea una lista con los valores de altura, peso e IMC, y añade 1.0 al final
-                List<Double> inputValues = new ArrayList<>(Arrays.asList(height, weight, index));
-
-                // Para que se usa inputValues?  No se usa en el codigo
+    public void loadData(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean isFirstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                if (line == null) {
+                    break;
+                }
+                String[] values = line.trim().split("\\s*,\\s*");
+//                System.out.println(values[0] + values[1] + values[2] + values[3]);
+                List<Double> features = new ArrayList<>();
+                labels.add("Male".equals(values[0]) ? 1.0 : 0.0); // Género: Male = 1.0, Female = 0.0, es decir cambia los males y females por 1 y 0
+                features.add(Double.valueOf(values[1])); // Altura
+                features.add(Double.valueOf(values[2])); // Peso
+                features.add(Double.valueOf(values[3])); // Índice de masa corporal
+                data.add(features);
 
             }
-        } catch (CsvValidationException e) {
-            // Si hay un error al validar el archivo CSV, lanza una excepción en tiempo de ejecución
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    // Método para entrenar y evaluar una red neuronal con los datos cargados
-    public void trainNetwork(Network network, double learningRate, double testRatio) {
-        // Mezcla y divide los datos en conjuntos de entrenamiento y prueba
-        int dataSize = inputData.size();
-        List<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < dataSize; i++) {
-            indices.add(i);
-        }
-        Collections.shuffle(indices);
-        int testSize = (int) (dataSize * testRatio);
-        int trainSize = dataSize - testSize;
+    public List<List<Double>> getData() {
+        return data;
+    }
 
-        // Entrena la red neuronal con los datos de entrenamiento
-        for (int i = 0; i < trainSize; i++) {
-            int index = indices.get(i);
-            network.train(inputData.get(index), List.of(outputData.get(index)), learningRate);
-        }
-
-        // Evalúa la red neuronal con los datos de prueba
-        int correct = 0;
-        for (int i = trainSize; i < dataSize; i++) {
-            int index = indices.get(i);
-            double prediction = network.feedForward(inputData.get(index));
-            double actual = outputData.get(index);
-            // Si la predicción coincide con el valor real, incrementa el contador de aciertos
-            if ((prediction >= 0.5 && actual == 1.0) || (prediction < 0.5 && actual == 0.0)) {
-                correct++;
-            }
-        }
-
-        // Calcula y muestra la precisión del modelo
-        double accuracy = (double) correct / testSize;
-        System.out.println("Accuracy: " + accuracy * 100 + "%");
+    public List<Double> getLabels() {
+        return labels;
     }
 }
