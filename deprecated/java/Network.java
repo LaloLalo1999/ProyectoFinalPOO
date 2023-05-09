@@ -28,7 +28,7 @@ public class Network {
         // Feedforward
         List<Double> inputOutputs = inputLayer.calculateOutputs(inputs);
         List<Double> hiddenOutputs = hiddenLayer.calculateOutputs(inputOutputs);
-        outputLayer.calculateOutputs(hiddenOutputs);
+        List<Double> outputOutputs = outputLayer.calculateOutputs(hiddenOutputs);
 
         // Backpropagation (propagación hacia atrás)
         outputLayer.calculateOutputDeltas(targets);

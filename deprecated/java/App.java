@@ -40,4 +40,6 @@ public class App {
         double prediction3 = network.feedForward(inputs2);
         System.out.println("Predicción: " + prediction2);
     }
-}
+    // Metodo que convierta los valores de altura, peso e indice de masa corporal a valores entre 0 y 1, para que la red neuronal pueda trabajar con ellos
+
+    

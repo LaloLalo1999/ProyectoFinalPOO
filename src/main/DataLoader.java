@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataLoader {
-    private final List<List<Double>> data;
+    private final List<List<Integer>> data;
     private final List<Double> labels;
 
     public DataLoader() {
-        data = new ArrayList<>();
+        //Lista de listas porque en un arreglo se guardan los pesos y las alturas [[190,60],[]]...
+        data = new ArrayList<List<Integer>>();
         labels = new ArrayList<>();
     }
 
@@ -27,12 +28,11 @@ public class DataLoader {
                     break;
                 }
                 String[] values = line.trim().split("\\s*,\\s*");
-//                System.out.println(values[0] + values[1] + values[2] + values[3]);
-                List<Double> features = new ArrayList<>();
-                labels.add("Male".equals(values[0]) ? 1.0 : 0.0); // Género: Male = 1.0, Female = 0.0, es decir cambia los males y females por 1 y 0
-                features.add(Double.valueOf(values[1])); // Altura
-                features.add(Double.valueOf(values[2])); // Peso
-                features.add(Double.valueOf(values[3])); // Índice de masa corporal
+//                System.out.println(values[0] + values[1] + values[2]);
+                List<Integer> features = new ArrayList<>();
+                labels.add("Male".equals(values[0]) ? 0.0 : 1.0); // Género: Male = 0.0, Female = 1.0, es decir cambia los males y females por 0 y 1
+                features.add(Integer.parseInt(values[1])); // Altura
+                features.add(Integer.parseInt(values[2])); // Peso
                 data.add(features);
 
             }
@@ -41,7 +41,7 @@ public class DataLoader {
         }
     }
 
-    public List<List<Double>> getData() {
+    public List<List<Integer>> getData() {
         return data;
     }
 

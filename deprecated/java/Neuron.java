@@ -19,20 +19,15 @@ public class Neuron {
         this.weights = new ArrayList<>();
         if (bias) {
             num_weights--;
+            this.weights.add(1.0); // Inicializa el sesgo, (es valor que se le agrega al producto de las entradas y los pesos para desplazar la función de activación)
         }
         for (int i = 0; i < num_weights; i++) {
             this.weights.add(r.nextDouble()); // Inicializa los pesos con valores aleatorios
         }
-        if (bias) {
-            this.weights.add(1.0); // Inicializa el sesgo con 1
-        }
-
     }
 
     // Calcula la suma ponderada de las entradas y los pesos de la neurona
     public double calculateWeightedSum(List<Double> inputs) {
-//        System.out.println("inputs: " + inputs);
-//        System.out.println("weights: " + weights);
         double sum = 0;
         for (int i = 0; i < inputs.size(); i++) {
             sum += inputs.get(i) * weights.get(i);
@@ -45,10 +40,11 @@ public class Neuron {
         return 1 / (1 + Math.exp(-x));
     }
 
-    // Calcula la salida de la neurona aplicando la función sigmoide a la suma ponderada
+    // Calcula la salida de la neurona aplicando la función sigmoid a la suma ponderada de las entradas y los pesos
     public void calculateOutput(List<Double> inputs) {
         double weightedSum = calculateWeightedSum(inputs);
         output = sigmoid(weightedSum);
+
     }
 
     // Calcula el delta de la neurona de salida con respecto al valor objetivo
