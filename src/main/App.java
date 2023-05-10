@@ -1,5 +1,9 @@
 package main;
 
+//Clases csv file
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import java.util.List;
 import java.util.Random;
 
@@ -42,5 +46,19 @@ public class App {
 //        System.out.println(String.format("Female, 120, 72: network1000: %.10f | network10000: %.10f", network1000.predict(120, 72), network10000.predict(120, 72)));
 //        System.out.println(String.format("Female, 143, 67: network1000: %.10f | network10000: %.10f", network1000.predict(143, 67), network10000.predict(120, 72)));
 //        System.out.println(String.format("Male, 130, 66: network1000: %.10f | network10000: %.10f", network1000.predict(130, 66), network10000.predict(130, 66)));
+        
+        //Crear el file
+        FileWriter csvFileSaveData = new FileWriter("my_data.csv");
+        //
+        PrintWriter writer = new PrintWriter(csvFileSaveData);
+
+        //Escribir en el archivo
+        writer.print("Prediction,\n");
+        writer.print(network1.predict(174,90));
+        writer.print(","); 
+        writer.println();
+
+        // Cerrar archivo
+        writer.close();
     }
 }
